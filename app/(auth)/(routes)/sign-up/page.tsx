@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,13 +11,16 @@ import axios, { AxiosError } from "axios";
 import { Check, X, Eye, EyeOff, ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { GradeDivisionSelector } from "@/components/grade-division-selector";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function SignUpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -65,11 +68,24 @@ export default function SignUpPage() {
       return;
     }
 
+    // Check if CAPTCHA is verified
+    if (!captchaToken) {
+      toast.error("يرجى التحقق من أنك لست روبوت");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await axios.post("/api/auth/register", formData);
+      const response = await axios.post("/api/auth/register", {
+        ...formData,
+        captchaToken,
+      });
       
       if (response.data.success) {
         toast.success("تم إنشاء الحساب بنجاح");
+        // Reset CAPTCHA
+        recaptchaRef.current?.reset();
+        setCaptchaToken(null);
         router.push("/sign-in");
       }
     } catch (error) {
@@ -288,10 +304,24 @@ export default function SignUpPage() {
               </div>
             </div>
 
+            {/* reCAPTCHA */}
+            <div className="flex justify-center">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"}
+                onChange={(token) => setCaptchaToken(token)}
+                onExpired={() => setCaptchaToken(null)}
+                onError={() => {
+                  setCaptchaToken(null);
+                  toast.error("حدث خطأ في التحقق. يرجى المحاولة مرة أخرى");
+                }}
+              />
+            </div>
+
             <Button
               type="submit"
               className="w-full h-10 bg-brand hover:bg-brand/90 text-white"
-              disabled={isLoading || !passwordChecks.isValid}
+              disabled={isLoading || !passwordChecks.isValid || !captchaToken}
             >
               {isLoading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
             </Button>

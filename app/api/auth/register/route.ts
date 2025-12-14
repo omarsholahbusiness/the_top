@@ -4,10 +4,32 @@ import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
-    const { fullName, phoneNumber, parentPhoneNumber, password, confirmPassword, curriculum, grade, division } = await req.json();
+    const { fullName, phoneNumber, parentPhoneNumber, password, confirmPassword, curriculum, grade, division, captchaToken } = await req.json();
 
     if (!fullName || !phoneNumber || !parentPhoneNumber || !password || !confirmPassword || !curriculum || !grade) {
       return new NextResponse("Missing required fields", { status: 400 });
+    }
+
+    // Verify CAPTCHA token
+    if (process.env.RECAPTCHA_SECRET_KEY) {
+      if (!captchaToken) {
+        return new NextResponse("CAPTCHA verification required", { status: 400 });
+      }
+
+      try {
+        const recaptchaResponse = await fetch(
+          `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`,
+          { method: "POST" }
+        );
+        const recaptchaData = await recaptchaResponse.json();
+
+        if (!recaptchaData.success) {
+          return new NextResponse("CAPTCHA verification failed", { status: 400 });
+        }
+      } catch (error) {
+        console.error("[RECAPTCHA_VERIFICATION]", error);
+        return new NextResponse("CAPTCHA verification error", { status: 500 });
+      }
     }
 
     // Validate curriculum
