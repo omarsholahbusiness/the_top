@@ -309,11 +309,17 @@ function SignUpForm() {
               <ReCAPTCHA
                 ref={recaptchaRef}
                 sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"}
-                onChange={(token) => setCaptchaToken(token)}
-                onExpired={() => setCaptchaToken(null)}
-                onError={() => {
+                onChange={(token) => {
+                  setCaptchaToken(token);
+                }}
+                onExpired={() => {
                   setCaptchaToken(null);
-                  toast.error("حدث خطأ في التحقق. يرجى المحاولة مرة أخرى");
+                  toast.warning("انتهت صلاحية التحقق. يرجى التحقق مرة أخرى");
+                }}
+                onError={(error) => {
+                  setCaptchaToken(null);
+                  console.error("[RECAPTCHA_ERROR]", error);
+                  toast.error("حدث خطأ في التحقق. يرجى تحديث الصفحة والمحاولة مرة أخرى");
                 }}
               />
             </div>

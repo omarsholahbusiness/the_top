@@ -24,7 +24,11 @@ export async function POST(req: Request) {
         const recaptchaData = await recaptchaResponse.json();
 
         if (!recaptchaData.success) {
-          return new NextResponse("CAPTCHA verification failed", { status: 400 });
+          console.error("[RECAPTCHA_VERIFICATION_FAILED]", recaptchaData);
+          return new NextResponse(
+            `CAPTCHA verification failed: ${recaptchaData["error-codes"]?.join(", ") || "Unknown error"}`,
+            { status: 400 }
+          );
         }
       } catch (error) {
         console.error("[RECAPTCHA_VERIFICATION]", error);
