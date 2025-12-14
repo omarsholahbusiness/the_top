@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Users, BookOpen, Award, ChevronDown, GraduationCap, Languages, Mountain, Rocket } from "lucide-react";
+import { ArrowRight, Star, Users, BookOpen, Award, Download } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/navbar";
@@ -44,7 +44,6 @@ type CourseWithProgress = Course & {
 export default function HomePage() {
   const [courses, setCourses] = useState<CourseWithProgress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -74,197 +73,67 @@ export default function HomePage() {
     fetchCourses();
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setShowScrollIndicator(entry.isIntersecting);
-      },
-      {
-        threshold: 0.5, // Trigger when 50% of the hero section is visible
-      }
-    );
-
-    const heroSection = document.getElementById('hero-section');
-    if (heroSection) {
-      observer.observe(heroSection);
-    }
-
-    return () => {
-      if (heroSection) {
-        observer.unobserve(heroSection);
-      }
-    };
-  }, []);
-
-  const scrollToCurriculum = () => {
-    const curriculumSection = document.getElementById('curriculum-section');
-    if (curriculumSection) {
-      const offset = curriculumSection.offsetTop - 80; // Adjust for navbar height
-      window.scrollTo({
-        top: offset,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   return (
     <div className="h-full w-full bg-background">
       <Navbar />
       <ScrollProgress />
       {/* Hero Section */}
-      <section id="hero-section" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-0 bg-gradient-to-t from-brand/25 via-brand/10 to-transparent">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-8 items-center">
-          {/* Image Section - First on mobile */}
+      <section id="hero-section" className="relative min-h-screen flex flex-col items-center overflow-hidden pt-20 md:pt-0">
+        <div className="container mx-auto px-4 flex flex-col items-center justify-between py-4 md:py-12 lg:py-20 w-full h-full min-h-[calc(100vh-5rem)]">
+          {/* Text Section - Centered */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative flex justify-center items-center order-1 md:order-2"
+            className="text-center mb-4 md:mb-12 lg:mb-16 mt-4 md:mt-12 lg:mt-20"
           >
-            <div className="relative w-64 h-64 md:w-80 md:h-80">
-              <Image
-                src="/teacher-image.png"
-                alt="اكاديمية القمة"
-                fill
-                priority
-                className="object-cover rounded-full border-4 border-brand/20 shadow-lg"
-                sizes="(max-width: 768px) 256px, 320px"
-              />
-            </div>
-            
-            {/* Floating Cards - Desktop Only */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ 
-                opacity: 1, 
-                y: [0, -15, 0],
-              }}
-              transition={{ 
-                duration: 0.5, 
-                delay: 0.5,
-                y: {
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }
-              }}
-              className="hidden md:block absolute top-1 -right-2 md:-right-4 z-10"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="bg-brand/20 backdrop-blur-sm rounded-lg border-2 border-brand shadow-lg px-3 py-2 flex items-center gap-2 min-w-[140px]">
-                <div className="bg-brand/30 rounded-full p-1.5">
-                  <GraduationCap className="h-5 w-5 text-brand" />
-                </div>
-                <span className="text-brand text-sm font-semibold whitespace-nowrap">مستقبلك يبدأ هنا</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ 
-                opacity: 1, 
-                y: [0, -12, 0],
-              }}
-              transition={{ 
-                duration: 0.5, 
-                delay: 0.7,
-                y: {
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }
-              }}
-              className="hidden md:block absolute bottom-1/3 left-6 md:left-8 z-10"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="bg-brand/20 backdrop-blur-sm rounded-lg border-2 border-brand shadow-lg px-3 py-2 flex items-center gap-2 min-w-[140px]">
-                <div className="bg-brand/30 rounded-full p-1.5">
-                  <Rocket className="h-5 w-5 text-brand" />
-                </div>
-                <span className="text-brand text-sm font-semibold whitespace-nowrap">انطلق للأفضل</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ 
-                opacity: 1, 
-                y: [0, -18, 0],
-              }}
-              transition={{ 
-                duration: 0.5, 
-                delay: 0.9,
-                y: {
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }
-              }}
-              className="hidden md:block absolute top-1/2 -right-6 md:-right-8 z-10"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="bg-brand/20 backdrop-blur-sm rounded-lg border-2 border-brand shadow-lg px-3 py-2 flex items-center gap-2 min-w-[140px]">
-                <div className="bg-brand/30 rounded-full p-1.5">
-                  <Mountain className="h-5 w-5 text-brand" />
-                </div>
-                <span className="text-brand text-sm font-semibold whitespace-nowrap">البداية نحو القمة</span>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Text Section - Second on mobile */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mt-0 md:mt-0 order-2 md:order-1"
-          >
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-8xl font-bold mb-3 md:mb-6 lg:mb-8">
               <span className="text-brand">اكاديمية القمة</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8">
-              طريقك الي النجاح
+            <p className="text-base sm:text-lg md:text-3xl lg:text-4xl font-bold text-muted-foreground mb-4 md:mb-12 lg:mb-16">
+              #طريقك_الي_النجاح
             </p>
-            <Button size="lg" asChild className="bg-brand hover:bg-brand/90 text-white">
-              <Link href="/sign-up">
-                ابدأ الآن <ArrowRight className="mr-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <div className="flex flex-col items-center gap-3 md:gap-6 lg:gap-8 w-full">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-2 md:gap-4 w-full sm:w-auto">
+                <Button asChild className="bg-brand hover:bg-brand/90 text-white text-sm md:text-xl px-3 md:px-8 py-2 md:py-4 h-auto w-[75vw] sm:w-48 md:w-64">
+                  <Link href="/sign-up">
+                    انشاء الحساب
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="border-brand text-brand hover:bg-brand/10 text-sm md:text-xl px-3 md:px-8 py-2 md:py-4 h-auto w-[75vw] sm:w-48 md:w-64">
+                  <Link href="/sign-in">
+                    تسجيل الدخول
+                  </Link>
+                </Button>
+              </div>
+              <Button asChild className="bg-gray-900 hover:bg-gray-800 text-white text-base md:text-xl px-4 md:px-8 py-3 md:py-4 h-auto w-[95vw] sm:w-64 md:w-80 lg:w-96">
+                <Link href="#">
+                  <Download className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+                  حمل التطبيق
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
+          
+          {/* Mobile Image */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="mt-auto mb-0 flex justify-center w-full md:px-2 overflow-visible md:overflow-hidden"
+          >
+            <div className="relative w-[220vw] sm:w-full max-w-[220vw] sm:max-w-xs md:max-w-lg lg:max-w-2xl xl:max-w-3xl scale-150 sm:scale-100">
+              <Image
+                src="/the-mobile.png"
+                alt="Mobile App"
+                width={640}
+                height={1280}
+                className="object-contain w-full h-auto max-h-[80vh] md:max-h-none"
+                priority
+              />
+            </div>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator */}
-        {showScrollIndicator && (
-          <motion.div 
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex-col items-center gap-2 cursor-pointer hidden md:flex"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ delay: 1, duration: 0.5 }}
-            onClick={scrollToCurriculum}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ChevronDown className="h-8 w-8 text-muted-foreground" />
-            </motion.div>
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-            >
-              <ChevronDown className="h-8 w-8 text-muted-foreground" />
-            </motion.div>
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-            >
-              <ChevronDown className="h-8 w-8 text-muted-foreground" />
-            </motion.div>
-          </motion.div>
-        )}
       </section>
 
       {/* Curriculum Selection Section */}
