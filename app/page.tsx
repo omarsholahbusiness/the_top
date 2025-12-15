@@ -79,13 +79,13 @@ export default function HomePage() {
       <ScrollProgress />
       {/* Hero Section */}
       <section id="hero-section" className="relative min-h-screen flex flex-col items-center overflow-hidden pt-20 md:pt-0">
-        <div className="container mx-auto px-4 flex flex-col items-center justify-between py-4 md:py-12 lg:py-20 w-full h-full min-h-[calc(100vh-5rem)]">
+        <div className="container mx-auto px-4 flex flex-col items-center justify-between py-4 md:py-12 lg:py-20 w-full h-full min-h-[calc(100vh-5rem)] gap-0">
           {/* Text Section - Centered */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-4 md:mb-12 lg:mb-16 mt-4 md:mt-12 lg:mt-20"
+            className="text-center mb-0 md:mb-12 lg:mb-16 mt-20 md:mt-12 lg:mt-20"
           >
             <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-8xl font-bold mb-3 md:mb-6 lg:mb-8">
               <span className="text-brand">اكاديمية القمة</span>
@@ -93,7 +93,7 @@ export default function HomePage() {
             <p className="text-base sm:text-lg md:text-3xl lg:text-4xl font-bold text-muted-foreground mb-4 md:mb-12 lg:mb-16">
               #طريقك_الي_النجاح
             </p>
-            <div className="flex flex-col items-center gap-3 md:gap-6 lg:gap-8 w-full">
+            <div className="flex flex-col items-center gap-2 md:gap-6 lg:gap-8 w-full mb-0 pb-0 -mb-2 md:mb-0">
               <div className="flex flex-col sm:flex-row justify-center items-center gap-2 md:gap-4 w-full sm:w-auto">
                 <Button asChild className="bg-brand hover:bg-brand/90 text-white text-sm md:text-xl px-3 md:px-8 py-2 md:py-4 h-auto w-[75vw] sm:w-48 md:w-64">
                   <Link href="/sign-up">
@@ -106,8 +106,8 @@ export default function HomePage() {
                   </Link>
                 </Button>
               </div>
-              <Button asChild className="bg-gray-900 hover:bg-gray-800 text-white text-base md:text-xl px-4 md:px-8 py-3 md:py-4 h-auto w-[95vw] sm:w-64 md:w-80 lg:w-96">
-                <Link href="#">
+              <Button asChild className="bg-gray-900 hover:bg-gray-800 text-white text-base md:text-xl px-4 md:px-8 py-3 md:py-4 h-auto w-[95vw] sm:w-64 md:w-80 lg:w-96 mb-0">
+                <Link href="https://download2289.mediafire.com/4xwbxvmhylrgFW2Ky-0fWn9Y_pvhyuyHs5Cmzo-qxe4bu14nYJaFOboeKfEw1ASwzMFfpW747ntWo5d0YilZSJlpasc2GOggdbKcapIEa5C2SEinMsHcL2GEDSU0lOgSff3BAJv_W2yGAYgSdQP_bbmws4lfNLcDA3IdM_wAiLTukA/tmmzb8imjktk1v3/theTop.apk" target="_blank" rel="noopener noreferrer">
                   <Download className="ml-2 h-4 w-4 md:h-5 md:w-5" />
                   حمل التطبيق
                 </Link>
@@ -120,7 +120,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-auto mb-0 flex justify-center w-full md:px-2 overflow-visible md:overflow-hidden"
+            className="relative -top-20 md:top-0 md:mt-auto mb-0 pt-0 pb-0 flex justify-center w-full md:px-2 overflow-visible md:overflow-hidden"
           >
             <div className="relative w-[220vw] sm:w-full max-w-[220vw] sm:max-w-xs md:max-w-lg lg:max-w-2xl xl:max-w-3xl scale-150 sm:scale-100">
               <Image
